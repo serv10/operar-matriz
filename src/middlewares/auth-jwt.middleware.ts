@@ -1,10 +1,11 @@
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-import { SECRET_KEY } from "../configs/config.ts";
-import { responderError } from "../utils/respuesta-error.util.ts";
-import { extraerToken } from "../utils/token.utils.ts";
+import { SECRET_KEY } from "../configs/config";
+import { responderError } from "../utils/respuesta-error.util";
+import { extraerToken } from "../utils/token.utils";
 
-const authJWT = (req, res, next) => {
+const authJWT = (req: Request, res: Response, next: NextFunction) => {
   // Obtenemos el token del encabezado de autorización
   const token = extraerToken(req.headers.authorization);
 
@@ -20,14 +21,12 @@ const authJWT = (req, res, next) => {
   }
 
   // Verificamos el token
-  jwt.verify(token, SECRET_KEY, (err, payload) => {
+  jwt.verify(token, SECRET_KEY!, (err, _payload) => {
     // Si el token no es válido, devolvemos un error
     if (err) {
       return responderError(res, 401, err.message, req.path, req.method);
     }
 
-    // Agregamos el payload del token al objeto de solicitud
-    req.payload = payload;
     next();
   });
 };

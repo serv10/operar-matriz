@@ -4,9 +4,9 @@ import {
   valorMaximoEntreMatrices,
   valorMinimoEntreMatrices,
   verificarMatricesDiagonales,
-} from "./operaciones.service.ts";
-import type { OperacionesResponse } from "../interfaces/operaciones-response.interface.ts";
-import { redondear } from "../utils/matematica.util.ts";
+} from "./operaciones.service";
+import type { OperacionesResponse } from "../interfaces/operaciones-response.interface";
+import { redondear } from "../utils/matematica.util";
 
 export const operarMatrices = (
   matrizQ: number[][],
@@ -26,7 +26,7 @@ export const operarMatrices = (
     // Devolvemos un array con null para error y los resultados de las operaciones.
     // Los valores numéricos son redondeados a 10 decimales
     return [
-      null,
+      undefined,
       {
         valorMaximo: redondear(valorMaximo, 10),
         valorMinimo: redondear(valorMinimo, 10),

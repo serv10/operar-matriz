@@ -1,12 +1,13 @@
 import { HttpStatusCode } from "axios";
+import { Request, Response } from "express";
 
-import { obtenerFactorizacionQR } from "../apis/factorizacion-qr.api.ts";
-import type { AnalizarMatrizResponse } from "../interfaces/analizar-matriz-response.interface.ts";
-import { operarMatrices } from "../services/operar-matrices.service.ts";
-import { estaPoblada } from "../utils/matriz.util.ts";
-import { extraerToken } from "../utils/token.utils.ts";
+import { obtenerFactorizacionQR } from "../apis/factorizacion-qr.api";
+import type { AnalizarMatrizResponse } from "../interfaces/analizar-matriz-response.interface";
+import { operarMatrices } from "../services/operar-matrices.service";
+import { estaPoblada } from "../utils/matriz.util";
+import { extraerToken } from "../utils/token.utils";
 
-export const analizarMatriz = async (req, res) => {
+export const analizarMatriz = async (req: Request, res: Response) => {
   // Obtenemos la matriz del cuerpo de la solicitud
   const { matriz } = req.body;
 
@@ -26,6 +27,11 @@ export const analizarMatriz = async (req, res) => {
 
   // Extraemos el token del encabezado de autorización
   const token = extraerToken(req.headers.authorization);
+  if (!token) {
+    return res
+      .status(HttpStatusCode.Unauthorized)
+      .json({ message: "No se proporcionó el token" });
+  }
 
   // Llamada a la función para obtener las matrices Q y R
   const [errFactorizacion, respFactorizacion] = await obtenerFactorizacionQR(
@@ -41,7 +47,7 @@ export const analizarMatriz = async (req, res) => {
   }
 
   // Obtenemos las matrices Q y R de la respuesta
-  const { matrizQ, matrizR } = respFactorizacion;
+  const { matrizQ, matrizR } = respFactorizacion!;
 
   // Obtenemos el error y la respuesta de las operaciones
   const [errOperaciones, respOperaciones] = operarMatrices(matrizQ, matrizR);
@@ -50,17 +56,17 @@ export const analizarMatriz = async (req, res) => {
   if (errOperaciones) {
     return res
       .status(HttpStatusCode.InternalServerError)
-      .json({ message: errFactorizacion.message });
+      .json({ message: errOperaciones.message });
   }
 
   // Creamos un objeto con los resultados de las operaciones
   const response: AnalizarMatrizResponse = {
-    valorMaximo: respOperaciones.valorMaximo,
-    valorMinimo: respOperaciones.valorMinimo,
-    suma: respOperaciones.suma,
-    promedio: respOperaciones.promedio,
-    esQDiagonal: respOperaciones.esQDiagonal,
-    esRDiagonal: respOperaciones.esRDiagonal,
+    valorMaximo: respOperaciones!.valorMaximo,
+    valorMinimo: respOperaciones!.valorMinimo,
+    suma: respOperaciones!.suma,
+    promedio: respOperaciones!.promedio,
+    esQDiagonal: respOperaciones!.esQDiagonal,
+    esRDiagonal: respOperaciones!.esRDiagonal,
     matrizQ,
     matrizR,
   };

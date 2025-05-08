@@ -7,7 +7,7 @@ import {
   sumarValores,
   valorMaximo,
   valorMinimo,
-} from "../utils/matriz.util.ts";
+} from "../utils/matriz.util";
 
 export const valorMaximoEntreMatrices = (
   matrizQ: number[][],

@@ -1,10 +1,9 @@
-import { Router } from "express";
+import { Application, Router } from "express";
 
-import { analizarMatriz } from "../controllers/analizar-matriz.controller.ts";
-import authJWT from "../middlewares/auth-jwt.middleware.ts";
+import { analizarMatriz } from "../controllers/analizar-matriz.controller";
 
 const router = Router();
 
-router.post("/", authJWT, analizarMatriz);
+router.post("/", analizarMatriz as Application);
 
 export default router;

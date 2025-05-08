@@ -1,8 +1,8 @@
 import axios, { HttpStatusCode } from "axios";
 
 // URL de la API en Node.js
-import { NODE_API_URL } from "../configs/config.ts";
-import type { FactorizacionResponse } from "../interfaces/factorizacion-response.interface.ts";
+import { NODE_API_URL } from "../configs/config";
+import type { FactorizacionResponse } from "../interfaces/factorizacion-response.interface";
 
 export const obtenerFactorizacionQR = async (
   matriz: number[][],
@@ -17,7 +17,7 @@ export const obtenerFactorizacionQR = async (
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Reemplaza 'token' por el valor real del JWT
+          Authorization: `Bearer ${token}`,
         },
       },
     );
@@ -28,7 +28,7 @@ export const obtenerFactorizacionQR = async (
     }
 
     // Devolvemos null como error y los datos de la respuesta
-    return [null, response.data as FactorizacionResponse];
+    return [undefined, response.data as FactorizacionResponse];
   } catch (error) {
     // Verificaremos el tipo del error y devolveremos un array con el error
     if (axios.isAxiosError(error)) {
